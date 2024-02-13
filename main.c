@@ -69,22 +69,8 @@ int main()
 
     int rodadasJogadas = 1;
     while (rodadasJogadas <= RODADAS_TOTAIS){
+        exibirTela(mao, mesa);
 
-        printf("Mesa: \n");
-        for (int i = 0; i < FILAS_DE_CARTAS; i++){
-            exibirFila(mesa[i]);
-        }
-
-        printf("\nSua coleção: ");
-        exibirLista(colecaoDoJogador[0]);
-        printf("Sua mão: ");
-        exibirLista(mao);
-        printf("        ");
-        for (int i = 1; i <= CARTAS_DO_JOGADOR; i++){
-            printf(" (%d) ", i);
-        }
-
-        printf("\n");
         int opcaoCarta;
         do
         {
@@ -94,6 +80,13 @@ int main()
 
         acessarIndice(mao,opcaoCarta,&cartaDeUsoGeral);
         removerIndice(mao,opcaoCarta);
+
+        Lista *cartasJogadas;
+        cartasJogadas = criarLista();
+        for (int i = 1; i < COLECOES; i++){
+            removerPilha(baralho,&cartaAuxiliar);
+            inserirOrenado(cartasJogadas,cartaAuxiliar);
+        }
 
         int diferencaDeCartas[4];
         int filaMenor[4];
@@ -110,8 +103,12 @@ int main()
 
         if(contaFilaMaior == 4){
             int filaEscolhida;
-            printf("\nEscolha uma fila para pegar todas as cartas (de 1 a 4)");
-            scanf("%d", &filaEscolhida);
+            do
+            {
+              printf("\nEscolha uma fila para pegar todas as cartas (de 1 a 4)");
+              scanf("%d", &filaEscolhida);
+            } while (filaEscolhida < 1 || filaEscolhida > 4);
+
 
             for (int i = 0; FILAS_DE_CARTAS+1; i++){
                 removerFila(mesa[filaEscolhida-1],&cartaAuxiliar);

@@ -3,6 +3,7 @@
 #define COLECOES 10
 #define CARTAS_DO_JOGADOR 10
 #define RODADAS_TOTAIS 10
+#define PONTUACAO_MINIMA 66
 
 struct carta{
     int numero;
