@@ -70,7 +70,7 @@ int acessarFila(Fila *fi, struct carta *dados){
         return 0;
     }
 
-    *dados = fi->inicio->dados;
+    *dados = fi->fim->dados;
     return 1;
 }
 
