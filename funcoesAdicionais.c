@@ -5,11 +5,7 @@
 #include "funcoesDeLista.h"
 #include "funcoesDeFila.h"
 
-int exibirTela(Lista *li, Fila **fi){
-    if(*li == NULL){
-        return 0;
-    }
-
+int exibirTela(Lista *li, Lista *ld, Fila **fi, char *nomeDeUsuario){
     int filasVazias = fi[0] == NULL && fi[1] == NULL && fi[2] == NULL && fi[3] == NULL ? 1 : 0;
 
     if(filasVazias){
@@ -21,13 +17,12 @@ int exibirTela(Lista *li, Fila **fi){
         exibirFila(fi[i]);
     }
 
-    printf("\nSua colecao: ");
+    printf("\nColecao de %s: ", nomeDeUsuario);
+    exibirLista(ld);
+
+    printf("\nMao de %s: \n", nomeDeUsuario);
     exibirLista(li);
 
-    printf("\nSua mao: ");
-    exibirLista(li);
-
-    printf("        ");
     for (int i = 1; i <= CARTAS_DO_JOGADOR; i++){
         printf(" (%d) ", i);
     }

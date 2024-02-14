@@ -71,82 +71,96 @@ int main()
     cartasDaRodada = NULL;
     cartasDaRodada = criarLista();
 
+    char nomeDoUsuario[30];
+    int numeroDePcs;
+
+    printf("Bem vindo! Digite seu nome... ");
+    scanf("%29s", nomeDoUsuario);
+    printf("Digite a quantidade de jogadores, além de você, no jogo... ");
+    scanf("%d", &numeroDePcs);
+
     int rodadasJogadas = 1;
     while (rodadasJogadas <= RODADAS_TOTAIS){
-        exibirTela(mao, mesa);
+        exibirTela(mao, colecaoDoJogador[0], mesa, &nomeDoUsuario);
 
-        int opcaoCarta;
+        int cartaEscolhida;
         do
         {
             printf("\nDigite o indice (de 1 a 10) da carta que quer jogar: ");
-            scanf("%d", &opcaoCarta);
-        } while (opcaoCarta < 1 || opcaoCarta > 10);
+            scanf("%d", &cartaEscolhida);
+        } while (cartaEscolhida < 1 || cartaEscolhida > 10);
 
-        acessarIndice(mao,opcaoCarta,&cartaDeUsoGeral);
-        removerIndice(mao,opcaoCarta);
+        acessarIndice(mao, cartaEscolhida, &cartaDeUsoGeral);
+        removerIndice(mao, cartaEscolhida);
+        inserirOrenado(cartasDaRodada, cartaDeUsoGeral);
 
-        Lista *cartasJogadas;
-        cartasJogadas = criarLista();
-        for (int i = 1; i < COLECOES; i++){
+        for (int i = 1; i <= numeroDePcs; i++){
             removerPilha(baralho,&cartaAuxiliar);
-            inserirOrenado(cartasJogadas,cartaAuxiliar);
+            cartaAuxiliar.jogador = i+1;
+            inserirOrenado(cartasDaRodada,cartaAuxiliar);
         }
 
-        int diferencaDeCartas[4];
-        int filaMenor[4];
-        int contaFilaMaior = 0, menorDiferenca;
-        for (int i = 0; i < FILAS_DE_CARTAS; i++){
-            acessarFila(mesa[i],&cartaAuxiliar);
-            if(cartaAuxiliar.numero < cartaDeUsoGeral.numero){
-                diferencaDeCartas[i] = cartaDeUsoGeral.numero - cartaAuxiliar.numero;
-            }
-            else {
-                contaFilaMaior++;
-            }
-        }
+        int diferenca, indiceDaMenor, qtdFilasMaiores;
+        int menorDiferenca = 104;
+        while (quantidade(cartasDaRodada) > 0){
+            acessarIndice(cartasDaRodada, 1, &cartaDeUsoGeral);
+            removerIndice(cartasDaRodada, 1);
+            qtdFilasMaiores = 0;
 
-        if(contaFilaMaior == 4){
-            int filaEscolhida;
-            do
-            {
-              printf("\nEscolha uma fila para pegar todas as cartas (de 1 a 4)");
-              scanf("%d", &filaEscolhida);
-            } while (filaEscolhida < 1 || filaEscolhida > 4);
-
-
-            for (int i = 0; FILAS_DE_CARTAS+1; i++){
-                removerFila(mesa[filaEscolhida-1],&cartaAuxiliar);
-                inserirOrenado(colecaoDoJogador[0],cartaAuxiliar);
-            }
-            inserirFila(mesa[filaEscolhida-1],cartaDeUsoGeral);
-        }
-        else{
-            int qtdVetorDiferencas = sizeof(diferencaDeCartas) / sizeof(diferencaDeCartas[0]);
-            menorDiferenca = diferencaDeCartas[0];
-            filaMenor[0] = 0;
-            for(int i = 1; i < qtdVetorDiferencas; i++){
-                if(diferencaDeCartas[i] < menorDiferenca){
-                    menorDiferenca = diferencaDeCartas[i];
-                    filaMenor[i] = i;
-                }
-            }
             for (int i = 0; i < FILAS_DE_CARTAS; i++){
-                if(i == filaMenor[i] && diferencaDeCartas[i] == menorDiferenca){
-                    if(tamanhoFila(mesa[i]) == 5){
-                        int j = 0;
-                        while(j < FILAS_DE_CARTAS+1){
-                            removerFila(mesa[i],&cartaAuxiliar);
-                            inserirOrenado(colecaoDoJogador[0],cartaAuxiliar);
-                            j++;
-                        }
-                        inserirFila(mesa[i],cartaDeUsoGeral);
+                acessarFila(mesa[i], &cartaAuxiliar);
+                printf("Carta da rodada: %d ", cartaDeUsoGeral.numero);
+                printf("Carta da mesa: %d ", cartaAuxiliar.numero);
+                if(cartaAuxiliar.numero < cartaDeUsoGeral.numero){
+                    printf("É menor!! ");
+                    diferenca = cartaAuxiliar.numero - cartaDeUsoGeral.numero;
+                    if(diferenca < menorDiferenca){
+                        menorDiferenca = diferenca;
+                        indiceDaMenor = i;
                     }
-                    else{
-                        inserirFila(mesa[i],cartaDeUsoGeral);
-                    }
+                } else {
+                    qtdFilasMaiores++;
                 }
             }
+
+            if(qtdFilasMaiores == 4){
+                if(cartaDeUsoGeral.jogador == 1){
+                    int filaEscolhida;
+                    do
+                    {
+                        printf("Escolha (de 1 a 4) uma fila para pegar todas as cartas: ");
+                        scanf("%d", &filaEscolhida);
+                    } while (filaEscolhida < 1 || filaEscolhida > 4);
+
+                    int indiceDaColecao = cartaDeUsoGeral.jogador - 1;
+                    while (tamanhoFila(mesa[filaEscolhida-1]) > 0){
+                        removerFila(mesa[filaEscolhida-1], &cartaAuxiliar);
+                        inserirOrenado(colecaoDoJogador[indiceDaColecao], cartaAuxiliar);
+                    }
+                    inserirFila(mesa[filaEscolhida-1], cartaDeUsoGeral);
+                } else {
+                    srand(time(NULL));
+                    int filaAleatoria = rand() % 4;
+
+                    int indiceDaColecao = cartaDeUsoGeral.jogador - 1;
+                    while (tamanhoFila(mesa[filaAleatoria]) > 0){
+                        removerFila(mesa[filaAleatoria], &cartaAuxiliar);
+                        inserirOrenado(colecaoDoJogador[indiceDaColecao], cartaAuxiliar);
+                    }
+                    inserirFila(mesa[filaAleatoria], cartaDeUsoGeral);
+                }
+            } else {
+                if(tamanhoFila(mesa[indiceDaMenor]) == 5){
+                    int indiceDaColecao = cartaDeUsoGeral.jogador - 1;
+                    for (int i = 0; i < 5; i++){
+                        removerFila(mesa[indiceDaMenor], &cartaAuxiliar);
+                        inserirOrenado(colecaoDoJogador[indiceDaColecao], cartaAuxiliar);
+                    }
+                }
+                inserirFila(mesa[indiceDaMenor], cartaDeUsoGeral);
+            }
         }
+
         rodadasJogadas++;
     }
 
