@@ -67,6 +67,10 @@ int main()
         inserirFila(mesa[i],cartaDeUsoGeral);
     }
 
+    Lista *cartasDaRodada;
+    cartasDaRodada = NULL;
+    cartasDaRodada = criarLista();
+
     int rodadasJogadas = 1;
     while (rodadasJogadas <= RODADAS_TOTAIS){
         exibirTela(mao, mesa);
