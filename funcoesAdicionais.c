@@ -31,3 +31,40 @@ int exibirTela(Lista *li, Lista *ld, Fila **fi, char *nomeDeUsuario){
 
     return 1;
 }
+
+int contarPontuacao(Lista *li){
+    if(*li == NULL){
+        return 0;
+    }
+
+    int pontos = 0;
+    Carta cartaContaPontos;
+
+    for (int i = 1; i <= quantidade(li); i++){
+        acessarIndice(li, i, &cartaContaPontos);
+        pontos += cartaContaPontos.bois;
+    }
+
+    return pontos;
+}
+
+void atribuirBois(struct carta *elemento, Pilha *pilha){
+    for (int i = 1; i <= CARTAS_TOTAL; i++){
+        elemento->numero = i;
+        elemento->bois = 1;
+        if(elemento->numero % 10 == 0 && elemento->numero % 2 == 0){
+            elemento->bois = 3;
+        }
+        if(elemento->numero % 11 == 0){
+            elemento->bois = 5;
+        }
+        if(elemento->numero % 5 == 0 && elemento->numero % 2 == 1){
+            elemento->bois = 2;
+        }
+        if(elemento->numero == 55){
+            elemento->bois = 7;
+        }
+        inserirPilha(pilha,*elemento);
+    }
+}
+
