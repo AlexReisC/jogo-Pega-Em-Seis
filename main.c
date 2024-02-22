@@ -34,23 +34,7 @@ int main()
     Carta cartaDeUsoGeral;
     Carta cartaAuxiliar;
 
-    for (int i = 1; i <= CARTAS_TOTAL; i++){
-        cartaDeUsoGeral.numero = i;
-        cartaDeUsoGeral.bois = 1;
-        if(cartaDeUsoGeral.numero % 10 == 0 && cartaDeUsoGeral.numero % 2 == 0){
-            cartaDeUsoGeral.bois = 3;
-        }
-        if(cartaDeUsoGeral.numero % 11 == 0){
-            cartaDeUsoGeral.bois = 5;
-        }
-        if(cartaDeUsoGeral.numero % 5 == 0 && cartaDeUsoGeral.numero % 2 == 1){
-            cartaDeUsoGeral.bois = 2;
-        }
-        if(cartaDeUsoGeral.numero == 55){
-            cartaDeUsoGeral.bois = 7;
-        }
-        inserirPilha(baralho,cartaDeUsoGeral);
-    }
+    atribuirBois(&cartaDeUsoGeral, baralho);
 
     for (int i = 0; i < CARTAS_TOTAL; i++){
         embaralhar(baralho);
@@ -97,23 +81,19 @@ int main()
         for (int i = 1; i <= numeroDePcs; i++){
             removerPilha(baralho,&cartaAuxiliar);
             cartaAuxiliar.jogador = i+1;
-            inserirOrenado(cartasDaRodada,cartaAuxiliar);
+            inserirOrenado(cartasDaRodada, cartaAuxiliar);
         }
 
-        int diferenca, indiceDaMenor, qtdFilasMaiores;
-        int menorDiferenca = 104;
         while (quantidade(cartasDaRodada) > 0){
             acessarIndice(cartasDaRodada, 1, &cartaDeUsoGeral);
             removerIndice(cartasDaRodada, 1);
-            qtdFilasMaiores = 0;
+            int diferenca, indiceDaMenor, qtdFilasMaiores = 0;
+            int menorDiferenca = 104;
 
             for (int i = 0; i < FILAS_DE_CARTAS; i++){
                 acessarFila(mesa[i], &cartaAuxiliar);
-                printf("Carta da rodada: %d ", cartaDeUsoGeral.numero);
-                printf("Carta da mesa: %d ", cartaAuxiliar.numero);
                 if(cartaAuxiliar.numero < cartaDeUsoGeral.numero){
-                    printf("É menor!! ");
-                    diferenca = cartaAuxiliar.numero - cartaDeUsoGeral.numero;
+                    diferenca = cartaDeUsoGeral.numero - cartaAuxiliar.numero;
                     if(diferenca < menorDiferenca){
                         menorDiferenca = diferenca;
                         indiceDaMenor = i;
@@ -164,6 +144,13 @@ int main()
         rodadasJogadas++;
     }
 
+    printf("\n !!! O JOGO ACABOU !!!\n");
+    printf("----- PONTUAÇÃO TOTAL -----\n");
+    for (int i = 0; i < numeroDePcs+1; i++){
+        printf("|   Jogador %d: %d", i+1, contarPontuacao(colecaoDoJogador[i]));
+        printf("                           |\n")
+    }
+    printf("---------------------------");
 
     return 0;
 }
