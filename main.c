@@ -32,7 +32,6 @@ int main()
     baralho = criarPilha();
 
     Carta cartaDeUsoGeral;
-    Carta cartaAuxiliar;
 
     atribuirBois(&cartaDeUsoGeral, baralho);
 
@@ -60,11 +59,13 @@ int main()
 
     printf("Bem vindo! Digite seu nome: ");
     scanf("%29s", nomeDoUsuario);
+    while( getchar() != '\n' );
 
     do
     {
-        printf("Digite a quantidade de jogadores, além de você, no jogo (1 a 9): ");
+        printf("Digite a quantidade de jogadores, alem de voce, no jogo (1 a 9): ");
         scanf("%d", &numeroDePcs);
+        while( getchar() != '\n' );
     } while (numeroDePcs < 1 || numeroDePcs > 9);
 
     int rodadasJogadas = 1;
@@ -76,6 +77,7 @@ int main()
         {
             printf("\nDigite o indice (de 1 a 10) da carta que quer jogar: ");
             scanf("%d", &cartaEscolhida);
+            while( getchar() != '\n' );
         } while (cartaEscolhida < 1 || cartaEscolhida > 10 || cartaEscolhida > quantidade(mao));
 
         acessarIndice(mao, cartaEscolhida, &cartaDeUsoGeral);
@@ -83,22 +85,27 @@ int main()
         inserirOrenado(cartasDaRodada, cartaDeUsoGeral);
 
         for (int i = 1; i <= numeroDePcs; i++){
-            removerPilha(baralho,&cartaAuxiliar);
-            cartaAuxiliar.jogador = i+1;
-            inserirOrenado(cartasDaRodada, cartaAuxiliar);
+            removerPilha(baralho,&cartaDeUsoGeral);
+            cartaDeUsoGeral.jogador = i+1;
+            inserirOrenado(cartasDaRodada, cartaDeUsoGeral);
         }
 
         adicionarCartaNaFila(mesa, colecaoDoJogador, cartasDaRodada);
 
         rodadasJogadas++;
     }
-
+    printf("\n-------------------------");
     printf("\n----- O JOGO ACABOU -----\n");
-    printf("--- Pontuação total ---\n");
+    printf("Colecoes de cada jogador: \n");
     for (int i = 0; i < numeroDePcs+1; i++){
-        printf("   Jogador %d: %d\n", i+1, contarPontuacao(colecaoDoJogador[i]));
+        printf("&d - ", i+1);
+        exibirLista(colecaoDoJogador[i]);
     }
-    printf("-------------------------");
+    printf("\n--- Pontuacao total ---\n");
+    for (int i = 0; i < numeroDePcs+1; i++){
+        printf("Jogador %d: %d\n", i+1, contarPontuacao(colecaoDoJogador[i]));
+    }
+    printf("\n-------------------------");
 
     return 0;
 }

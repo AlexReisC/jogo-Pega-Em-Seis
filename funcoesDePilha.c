@@ -52,6 +52,7 @@ int removerPilha(Pilha *pi, struct carta *dados){
 
 void embaralhar(Pilha *pi){
     if(pi == NULL && *pi == NULL){
+        printf("\nBaralho vazio\n");
         exit(1);
     }
 
