@@ -58,10 +58,14 @@ int main()
     char nomeDoUsuario[30];
     int numeroDePcs;
 
-    printf("Bem vindo! Digite seu nome... ");
+    printf("Bem vindo! Digite seu nome: ");
     scanf("%29s", nomeDoUsuario);
-    printf("Digite a quantidade de jogadores, além de você, no jogo... ");
-    scanf("%d", &numeroDePcs);
+
+    do
+    {
+        printf("Digite a quantidade de jogadores, além de você, no jogo (1 a 9): ");
+        scanf("%d", &numeroDePcs);
+    } while (numeroDePcs < 1 || numeroDePcs > 9);
 
     int rodadasJogadas = 1;
     while (rodadasJogadas <= RODADAS_TOTAIS){
@@ -72,7 +76,7 @@ int main()
         {
             printf("\nDigite o indice (de 1 a 10) da carta que quer jogar: ");
             scanf("%d", &cartaEscolhida);
-        } while (cartaEscolhida < 1 || cartaEscolhida > 10);
+        } while (cartaEscolhida < 1 || cartaEscolhida > 10 || cartaEscolhida > quantidade(mao));
 
         acessarIndice(mao, cartaEscolhida, &cartaDeUsoGeral);
         removerIndice(mao, cartaEscolhida);
@@ -84,73 +88,17 @@ int main()
             inserirOrenado(cartasDaRodada, cartaAuxiliar);
         }
 
-        while (quantidade(cartasDaRodada) > 0){
-            acessarIndice(cartasDaRodada, 1, &cartaDeUsoGeral);
-            removerIndice(cartasDaRodada, 1);
-            int diferenca, indiceDaMenor, qtdFilasMaiores = 0;
-            int menorDiferenca = 104;
-
-            for (int i = 0; i < FILAS_DE_CARTAS; i++){
-                acessarFila(mesa[i], &cartaAuxiliar);
-                if(cartaAuxiliar.numero < cartaDeUsoGeral.numero){
-                    diferenca = cartaDeUsoGeral.numero - cartaAuxiliar.numero;
-                    if(diferenca < menorDiferenca){
-                        menorDiferenca = diferenca;
-                        indiceDaMenor = i;
-                    }
-                } else {
-                    qtdFilasMaiores++;
-                }
-            }
-
-            if(qtdFilasMaiores == 4){
-                if(cartaDeUsoGeral.jogador == 1){
-                    int filaEscolhida;
-                    do
-                    {
-                        printf("Escolha (de 1 a 4) uma fila para pegar todas as cartas: ");
-                        scanf("%d", &filaEscolhida);
-                    } while (filaEscolhida < 1 || filaEscolhida > 4);
-
-                    int indiceDaColecao = cartaDeUsoGeral.jogador - 1;
-                    while (tamanhoFila(mesa[filaEscolhida-1]) > 0){
-                        removerFila(mesa[filaEscolhida-1], &cartaAuxiliar);
-                        inserirOrenado(colecaoDoJogador[indiceDaColecao], cartaAuxiliar);
-                    }
-                    inserirFila(mesa[filaEscolhida-1], cartaDeUsoGeral);
-                } else {
-                    srand(time(NULL));
-                    int filaAleatoria = rand() % 4;
-
-                    int indiceDaColecao = cartaDeUsoGeral.jogador - 1;
-                    while (tamanhoFila(mesa[filaAleatoria]) > 0){
-                        removerFila(mesa[filaAleatoria], &cartaAuxiliar);
-                        inserirOrenado(colecaoDoJogador[indiceDaColecao], cartaAuxiliar);
-                    }
-                    inserirFila(mesa[filaAleatoria], cartaDeUsoGeral);
-                }
-            } else {
-                if(tamanhoFila(mesa[indiceDaMenor]) == 5){
-                    int indiceDaColecao = cartaDeUsoGeral.jogador - 1;
-                    for (int i = 0; i < 5; i++){
-                        removerFila(mesa[indiceDaMenor], &cartaAuxiliar);
-                        inserirOrenado(colecaoDoJogador[indiceDaColecao], cartaAuxiliar);
-                    }
-                }
-                inserirFila(mesa[indiceDaMenor], cartaDeUsoGeral);
-            }
-        }
+        adicionarCartaNaFila(mesa, colecaoDoJogador, cartasDaRodada);
 
         rodadasJogadas++;
     }
 
-    printf("\n !!! O JOGO ACABOU !!!\n");
-    printf("----- PONTUAÇÃO TOTAL -----\n");
+    printf("\n----- O JOGO ACABOU -----\n");
+    printf("--- Pontuação total ---\n");
     for (int i = 0; i < numeroDePcs+1; i++){
-        printf("|   Jogador %d: %d", i+1, contarPontuacao(colecaoDoJogador[i]));
-        printf("                           |\n")
+        printf("   Jogador %d: %d\n", i+1, contarPontuacao(colecaoDoJogador[i]));
     }
-    printf("---------------------------");
+    printf("-------------------------");
 
     return 0;
 }

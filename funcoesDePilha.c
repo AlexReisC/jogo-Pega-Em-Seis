@@ -55,6 +55,8 @@ void embaralhar(Pilha *pi){
         exit(1);
     }
 
+    srand(time(NULL));
+
     int contador = 1;
     int indiceCarta;
     indiceCarta = 1 + rand() % CARTAS_TOTAL;
