@@ -35,6 +35,7 @@ int main()
 
     atribuirBois(&cartaDeUsoGeral, baralho);
 
+    srand(time(NULL));
     for (int i = 0; i < CARTAS_TOTAL; i++){
         embaralhar(baralho);
     }
@@ -75,7 +76,7 @@ int main()
         int cartaEscolhida;
         do
         {
-            printf("\nDigite o indice (de 1 a 10) da carta que quer jogar: ");
+            printf("Digite o indice (de 1 a 10) da carta que quer jogar: ");
             scanf("%d", &cartaEscolhida);
             while( getchar() != '\n' );
         } while (cartaEscolhida < 1 || cartaEscolhida > 10 || cartaEscolhida > quantidade(mao));
@@ -94,18 +95,11 @@ int main()
 
         rodadasJogadas++;
     }
+
     printf("\n-------------------------");
     printf("\n----- O JOGO ACABOU -----\n");
-    printf("Colecoes de cada jogador: \n");
-    for (int i = 0; i < numeroDePcs+1; i++){
-        printf("&d - ", i+1);
-        exibirLista(colecaoDoJogador[i]);
-    }
-    printf("\n--- Pontuacao total ---\n");
-    for (int i = 0; i < numeroDePcs+1; i++){
-        printf("Jogador %d: %d\n", i+1, contarPontuacao(colecaoDoJogador[i]));
-    }
-    printf("\n-------------------------");
+
+    exibirPontuacao(colecaoDoJogador, numeroDePcs+1);
 
     return 0;
 }

@@ -102,6 +102,7 @@ void adicionarCartaNaFila(Fila **filas, Lista **colecoes, Lista *cartas){
                 {
                     printf("Escolha (de 1 a 4) uma fila para pegar todas as cartas: ");
                     scanf("%d", &filaEscolhida);
+                    while(getchar() != '\n');
                 } while (filaEscolhida < 1 || filaEscolhida > 4);
 
                 int indiceDaColecao = cartaJogada.jogador - 1;
@@ -131,5 +132,18 @@ void adicionarCartaNaFila(Fila **filas, Lista **colecoes, Lista *cartas){
             }
             inserirFila(filas[indiceDaMenor], cartaJogada);
         }
+    }
+}
+
+void exibirPontuacao(Lista **colecoes, int numeroDeJogadores){
+    printf("Colecoes de cada jogador: \n");
+    for (int i = 0; i < numeroDeJogadores; i++){
+        printf("Jogador %d: ", i+1);
+        exibirLista(colecoes[i]);
+    }
+
+    printf("\n--- Pontuacao total ---\n");
+    for (int i = 0; i < numeroDeJogadores; i++){
+        printf("Jogador %d: %d\n", i+1, contarPontuacao(colecoes[i]));
     }
 }
