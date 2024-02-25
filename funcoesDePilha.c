@@ -56,22 +56,23 @@ void embaralhar(Pilha *pi){
         exit(1);
     }
 
-    int contador = 1;
-    int indiceCarta;
-    indiceCarta = 1 + rand() % CARTAS_TOTAL;
+    srand(time(NULL));
 
-    No *posInicio = *pi;
-    No *posFim = *pi;
+    for (int i = CARTAS_TOTAL - 1; i > 0; i--) {
+        int indiceAleatorio = rand() % (i + 1);
 
-    while(posFim != NULL && contador != indiceCarta){
-        posFim = posFim->prox;
-        contador++;
+        No *cartaAuxiliar = *pi;
+        No *cartaSorteada = *pi;
+        for (int j = 0; j < i; j++) {
+            cartaAuxiliar = cartaAuxiliar->prox;
+        }
+        for (int j = 0; j < indiceAleatorio; j++) {
+            cartaSorteada = cartaSorteada->prox;
+        }
+        Carta aux = cartaAuxiliar->dados;
+        cartaAuxiliar->dados = cartaSorteada->dados;
+        cartaSorteada->dados = aux;
     }
-
-    *pi = posInicio->prox;
-    posInicio->prox = posFim->prox;
-    posFim->prox = posInicio;
-
 }
 
 int tamanhoPilha(Pilha *pi){

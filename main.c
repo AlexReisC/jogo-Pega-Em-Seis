@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
-#include <time.h>
 #include "carta.h"
 #include "funcoesDeLista.h"
 #include "funcoesDeFila.h"
@@ -35,10 +34,7 @@ int main()
 
     atribuirBois(&cartaDeUsoGeral, baralho);
 
-    srand(time(NULL));
-    for (int i = 0; i < CARTAS_TOTAL; i++){
-        embaralhar(baralho);
-    }
+    embaralhar(baralho);
 
     for (int i = 0; i < CARTAS_DO_JOGADOR; i++){
         removerPilha(baralho,&cartaDeUsoGeral);
